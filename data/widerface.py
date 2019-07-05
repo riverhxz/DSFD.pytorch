@@ -1,4 +1,4 @@
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 from __future__ import absolute_import
 from __future__ import division
@@ -10,7 +10,8 @@ import torch.utils.data as data
 import numpy as np
 import random
 from utils.augmentations import preprocess
-
+import os
+print(os.system("pwd"))
 
 class WIDERDetection(data.Dataset):
     """docstring for WIDERDetection"""
@@ -27,18 +28,19 @@ class WIDERDetection(data.Dataset):
 
         for line in lines:
             line = line.strip().split()
-            num_faces = int(line[1])
+            num_faces = int((len(line) - 1) // 5)
             box = []
             label = []
             for i in xrange(num_faces):
-                x = float(line[2 + 5 * i])
-                y = float(line[3 + 5 * i])
-                w = float(line[4 + 5 * i])
-                h = float(line[5 + 5 * i])
-                c = int(line[6 + 5 * i])
+
+                x = float(line[1 + 5 * i])
+                y = float(line[2 + 5 * i])
+                w = float(line[3 + 5 * i])
+                h = float(line[4 + 5 * i])
+                c = int(line[5 + 5 * i])
                 if w <= 0 or h <= 0:
                     continue
-                box.append([x, y, x + w, y + h])
+                box.append([x, y, w, h])
                 label.append(c)
             if len(box) > 0:
                 self.fnames.append(line[0])
@@ -75,12 +77,11 @@ class WIDERDetection(data.Dataset):
 
                 assert (target[:, 2] > target[:, 0]).any()
                 assert (target[:, 3] > target[:, 1]).any()
-                break 
+                break
             else:
                 index = random.randrange(0, self.num_samples)
 
-        
-        #img = Image.fromarray(img)
+        # img = Image.fromarray(img)
         '''
         draw = ImageDraw.Draw(img)
         w,h = img.size
@@ -91,7 +92,6 @@ class WIDERDetection(data.Dataset):
         img.save('image.jpg')
         '''
         return torch.from_numpy(img), target, im_height, im_width
-        
 
     def annotransform(self, boxes, im_width, im_height):
         boxes[:, 0] /= im_width
@@ -124,6 +124,7 @@ def detection_collate(batch):
 
 if __name__ == '__main__':
     from config import cfg
-    dataset = WIDERDetection(cfg.FACE.TRAIN_FILE)
-    #for i in range(len(dataset)):
+
+    dataset = WIDERDetection("/Users/huanghaihun/PycharmProjects/DSFD.pytorch/data/train.txt")
+    # for i in range(len(dataset)):
     dataset.pull_item(14)
