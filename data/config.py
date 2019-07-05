@@ -65,8 +65,8 @@ _C.HOME = '/home/lijun/data/'
 
 # face config
 _C.FACE = EasyDict()
-_C.FACE.TRAIN_FILE = './data_dir/face_train.txt'
-_C.FACE.VAL_FILE = './data/face_val.txt'
+_C.FACE.TRAIN_FILE = './data/train.txt'
+_C.FACE.VAL_FILE = './data/test.txt'
 _C.FACE.FDDB_DIR = '/home/lijun/data/FDDB'
 _C.FACE.WIDER_DIR = '/home/lijun/data/WIDER'
 _C.FACE.AFW_DIR = '/home/lijun/data/AFW'
